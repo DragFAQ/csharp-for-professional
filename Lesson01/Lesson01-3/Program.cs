@@ -28,6 +28,7 @@ namespace Lesson01_3
             persons.Add(pensioner);
             LogPersons(persons);
             persons.Remove();
+            LogPersons(persons);
             persons.Remove(pensioner);
             LogPersons(persons);
         }

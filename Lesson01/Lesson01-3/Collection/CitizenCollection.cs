@@ -10,32 +10,20 @@ namespace Lesson01_3.Collection
 
     using Lesson01_3.Model;
 
-    public class CitizenCollection : ICollection
+    public class CitizenCollection : IEnumerable
     {
         private readonly object syncRoot = new object();
 
-        private readonly List<Citizen> elements = new List<Citizen>();
+        private Citizen[] elements;
 
-        public int Count => this.elements.Count;
+        public CitizenCollection()
+        {
+            this.elements = new Citizen[0];
+        }
 
-        public object SyncRoot => this.syncRoot;
-
-        public bool IsSynchronized => true;
+        public int Count => this.elements.Length;
 
         public IEnumerator GetEnumerator() => this.elements.GetEnumerator();
-
-        public void CopyTo(Array array, int index)
-        {
-            var arr = array as object[];
-
-            if (arr == null)
-                throw new ArgumentException("Expecting array to be object[]");
-
-            foreach (var item in this.elements)
-            {
-                arr[index++] = item;
-            }
-        }
 
         public int Add(Citizen person)
         {
@@ -47,47 +35,96 @@ namespace Lesson01_3.Collection
             }
             else
             {
+                Citizen[] arr = new Citizen[this.Count + 1];
                 if (person.GetType() == typeof(Pensioner))
                 {
-                    for (var i = 0; i < this.elements.Count; i++)
+                    for (var i = 0; i < this.Count; i++)
                     {
                         if (this.elements[i].GetType() == typeof(Pensioner))
                         {
+                            arr[i] = this.elements[i];
                             continue;
                         }
 
-                        this.elements.Insert(i, person);
+                        arr[i] = person;
+                        var j = i + 1;
+                        Array.ConstrainedCopy(this.elements, i, arr, i + 1, this.Count - i);
+
+                        this.elements = arr;
+
                         return i;
                     }
                 }
 
-                this.elements.Add(person);
-                return this.elements.Count - 1;
+                Array.ConstrainedCopy(this.elements, 0, arr, 0, this.Count);
+                arr[this.Count] = person;
+
+                this.elements = arr;
+
+                return this.Count - 1;
             }
         }
 
-        public void Remove(Citizen person = null)
+        public void Remove(Citizen person)
         {
-            if (person == null && this.elements.Count > 0)
+            if (this.Contains(person, out var index))
             {
-                this.elements.RemoveAt(0);
+                Citizen[] arr = new Citizen[this.Count - 1];
+                var j = 0;
+                for (int i = 0; i < this.Count; i++)
+                {
+                    if (i == index)
+                        continue;
+                    arr[j] = this.elements[i];
+                    j++;
+                }
+
+                this.elements = arr;
+            }            
+        }
+
+        public void Remove()
+        {
+            Citizen[] arr = new Citizen[this.Count - 1];
+
+            Array.ConstrainedCopy(this.elements, 1, arr, 0, this.Count - 1);
+
+            this.elements = arr;
+        }
+
+        public bool Contains(Citizen person, out int index)
+        {
+            index = -1;
+
+            for (int i = 0; i < this.Count; i++)
+            {
+                if (this.elements[i].Equals(person))
+                {
+                    index = i;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public Citizen ReturnLast(out int index)
+        {
+            if (this.Count > 0)
+            {
+                index = this.Count - 1;
+                return this.elements[index];
             }
             else
             {
-                this.elements.Remove(person);
+                index = -1;
+                return null;
             }
         }
 
-        public bool Contains(Citizen person) => this.elements.Contains(person);
-
-        public int Contains(Citizen person) => this.elements.IndexOf(person);
-
-        public Citizen ReturnLast();
-
         public void Clear()
         {
-            this.elements.Clear();
-
+            this.elements = new Citizen[0];
         }
     }
 }
