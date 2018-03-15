@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7CEDD397-77B8-428C-8433-7AA0D402FC71}</ProjectGuid>
+    <ProjectGuid>{62C6631C-856E-4478-B38A-FAE1F4CCCF87}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Lesson01</RootNamespace>
-    <AssemblyName>Lesson01</AssemblyName>
+    <RootNamespace>Lesson01_3</RootNamespace>
+    <AssemblyName>Lesson01-3</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -42,13 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collection\Month.cs" />
-    <Compile Include="Collection\MonthsCollection.cs" />
+    <Compile Include="Collection\CitizenCollection.cs" />
+    <Compile Include="Model\Citizen.cs" />
+    <Compile Include="Model\Pensioner.cs" />
+    <Compile Include="Model\Student.cs" />
+    <Compile Include="Model\Worker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
